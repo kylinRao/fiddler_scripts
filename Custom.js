@@ -237,7 +237,7 @@ class Handlers
             oSession["ui-backcolor"] = "Lavender";
         }
 		
-        FiddlerApplication.Log.LogString(oSession.clientIP+'____  '+oSession.clientPort+'____  '+oSession.fullUrl+'____  '+oSession.url+'____  '+oSession.host+'____  '+oSession.hostname+'___'+oSession.oRequest.headers['User-Agent']);
+        //FiddlerApplication.Log.LogString(oSession.clientIP+'____  '+oSession.clientPort+'____  '+oSession.fullUrl+'____  '+oSession.url+'____  '+oSession.host+'____  '+oSession.hostname+'___'+oSession.oRequest.headers['User-Agent']);
 		
         if(m_ModifyRequest  && oSession.host.IndexOf("www.baidu.com") > -1){
             // oSession.hostname = "www.so.com";  
@@ -251,7 +251,13 @@ class Handlers
             oSession.url = oSession.url.Replace("hello","world");
     
         }
+        if(oSession.fullUrl.IndexOf("http://app.bdz365.com/Joke_Manage/goodCount")> -1){
+            //System.Threading.Thread.Sleep(4000);
+            }
 		
+        if(oSession.fullUrl.IndexOf("http://app.bdz365.com/New_Joke/myPublishJoke")> -1){
+            oSession.fullUrl="http://127.0.0.1:5000";
+            }
 		
     }
 
@@ -336,6 +342,32 @@ class Handlers
                 }
             
         }
+        
+        if(oSession.fullUrl.IndexOf("http://app.bdz365.com/New_Joke/myPublishJoke") > -1){
+            
+            // 1, 获取Response Body中JSON字符串
+                         var responseStringOriginal =  oSession.GetResponseBodyAsString();
+                       //FiddlerObject.log(responseStringOriginal);    // 可在控制台中输出Log
+                       
+                        // 2, 转换为可编辑的JSONObject变量
+                        var responseJSON = Fiddler.WebFormats.JSON.JsonDecode(responseStringOriginal);
+                        
+                        // 3, 修改JSONObject变量
+                        // 3.1修改字段
+                        
+           // FiddlerApplication.Log.LogString(responseJSON.JSONObject['data']);
+            var i=0;
+            for(var item in responseJSON.JSONObject['data']){
+                i=i+1;
+                //FiddlerApplication.Log.LogString(i);
+                if(item['status']==2){
+                   FiddlerApplication.Log.LogString(item['id']);
+                    }
+                 
+                }
+            
+            
+            }
 
 
         
